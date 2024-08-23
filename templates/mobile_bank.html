@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+        <!-- Topbar Start -->
+        <div class="container-fluid bg-dark py-2 d-none d-md-flex">
+            <div class="container">
+                <div class="d-flex justify-content-between topbar">
+                    <div class="top-info">
+                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-map-marker-alt me-2 text-secondary"></i></a>23 Ranking Street, New York</small>
+                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-envelope me-2 text-secondary"></i></a>Email@Example.com</small>
+                    </div>
+                    <div id="note" class="text-secondary d-none d-xl-flex"><small>Note : We help you to Grow your Business</small></div>
+                    <div class="top-link">
+                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-facebook-f text-primary"></i></a>
+                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-twitter text-primary"></i></a>
+                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-instagram text-primary"></i></a>
+                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i class="fab fa-linkedin-in text-primary"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Topbar End -->
+
+        <!-- Navbar Start -->
+        <div class="container-fluid bg-primary">
+            <div class="container">
+                <nav class="navbar navbar-dark navbar-expand-lg py-0">
+                    <a href="/index" class="navbar-brand">
+                        <h1 class="text-white fw-bold d-block">High<span class="text-secondary">Tech</span> </h1>
+                    </a>
+                    <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+                        <div class="navbar-nav ms-auto mx-xl-auto p-0">
+                            {% if user.is_authenticated %}
+                            <a href="/index" class="nav-item nav-link ">Home</a>
+                            <a href="/about" class="nav-item  nav-link">About</a>
+                            <a href="/service" class="nav-item nav-link">Services</a>
+                            <a href="/recovery" class="nav-item nav-link">Projects</a>
+                            <a href="/commune" class="nav-item nav-link">Contact</a>
+                            <a href="/chat" class="nav-item nav-link"><i class="fas fa-question-circle"></i> FAQ</a>
+                            
+                        </div>
+                    </div>
+                    <div class="d-none d-xl-flex flex-shirink-0">
+                        <div id="phone-tada" class="d-flex align-items-center justify-content-center me-4">
+                            <a href="https://wa.me/12512940274?text=Hello%20welcome%20to%20the%20best%20internet%20services%27%20providers%20globally,%20How%20may%20we%20help%20" class="position-relative animated tada infinite">
+                                <i class="fab fa-whatsapp text-white fa-4x"></i>
+                                <div class="position-absolute" style="top: -7px; left: 20px;">
+                                    <span><i class="fa fa-comment-dots text-secondary"></i></span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="d-flex flex-column pe-4 border-end">
+                            <span class="text-white-50">Have any questions?</span>
+                            <span class="text-secondary">Chat: +1 251 294-0274</span>
+                        </div>
+                    </div>
+                    <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+                            <!-- Profile and notifications -->
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="profile-pic-container">
+                            <img src="{{customer.profile_pic.url}}" alt="Profile Picture" class="profile-pic">
+                            <div class="online-indicator"></div>
+                        </div>
+                        <span class="ms-2 text-light" style="font-size: larger; font-weight: bolder;">Hello, {{ request.user.username }}</span>
+                    </a>
+                   
+                    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="{% url 'profile' customer.id %}">Profile</a></li>
+                        <li> <a href="notifications" class="text-body " style="margin-left: 10%;">
+                            <i class="fas fa-envelope fa-2x "></i>
+                            <span class="badge rounded-pill badge-notification bg-danger">{{ unread_notifications_count }}</span>
+                        </a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                </div>
+                        </div>
+                            {% else %}
+                            <a href="/login" class="nav-item nav-link text-white">LOGIN</a>
+                            <a href="/register" class="nav-item nav-link text-white">SIGNUP</a>
+                           {% endif %} 
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- Navbar End -->
+
+        
+        <!-- Page Header Start -->
+        <div class="container-fluid page-header py-5">
+            <div class="container text-center py-5">
+                <h1 class="display-2 text-white mb-4 animated slideInDown">Manual Payments</h1>
+                <nav aria-label="breadcrumb animated slideInDown">
+                    
+                </nav>
+            </div>
+        </div>
+        <!-- Page Header End -->
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Profile Cards -->
+        {% for profile in profiles %}
+        <div class="col-lg-6 col-md-12 col-sm-12 mb-3 profile-card" data-profile-id="{{ profile.id }}">
+            <div class="card text-center" style="border-radius: 20px;">
+                <div class="card-header" style="background-color: #235ba4; border-radius: 20px 20px 0 0;">
+                    <img src="{{ profile.profile_image.url }}" class="rounded-circle" alt="Profile Image" width="60">
+                    <h4 class="card-title mt-2">{{ profile.user.username }}</h4>
+                    <p class="text-white">Status: {{ profile.active_status|yesno:"Active,Inactive" }}</p>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-around">
+                        <div>
+                            <h5>{{ profile.likes }}</h5>
+                            <p>Likes</p>
+                        </div>
+                        <div>
+                            <h5>{{ profile.completed_transactions }}</h5>
+                            <p>Transactions</p>
+                        </div>
+                        <div>
+                            <h5>{{ profile.transaction_time_frame }}</h5>
+                            <p>Time Frame</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Social Apps Section -->
+    <div class="row mt-4" id="social-apps-container">
+        <!-- Social app cards will be dynamically inserted here by JavaScript -->
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const profileCards = document.querySelectorAll('.profile-card');
+        const socialAppsContainer = document.getElementById('social-apps-container');
+
+        profileCards.forEach(card => {
+            card.addEventListener('click', function () {
+                const profileId = this.getAttribute('data-profile-id');
+
+                fetch(`/get-social-apps/${profileId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        socialAppsContainer.innerHTML = ''; // Clear previous social apps
+                        data.social_apps.forEach(app => {
+                            const appCard = `
+                                <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                    <div class="card text-center" style="border-radius: 20px;">
+                                        <img src="${app.image_url}" class="card-img-top" alt="${app.name}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${app.name}</h5>
+                                            <p class="card-text">Click below to redirect to the app for payment.</p>
+                                            <a href="${app.link}" target="_blank" class="btn btn-primary">Pay via ${app.name}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            socialAppsContainer.insertAdjacentHTML('beforeend', appCard);
+                        });
+                    });
+            });
+        });
+    });
+</script>
+{% endblock %}

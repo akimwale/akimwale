@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 1200px;
+    }
+    
+    .card {
+        border: none;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-img-top {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+    
+    .card-body h5 {
+        margin-top: 10px;
+        font-size: 1.25rem;
+    }
+    
+    .card-body .card-title {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        
+    }
+    
+    .form-group {
+        margin-bottom: 2.5rem;
+        margin-left: 5px;
+    }
+    
+    .btn-block {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        font-size: 1.25rem;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        text-align: center;
+        margin-left: 8px;
+    }
+    
+    .btn-block:hover {
+        background-color: #0056b3;
+    }
+    
+    @media (min-width: 992px) {
+        .row {
+            display: flex;
+            align-items: center;
+        }
+    
+        .card-img-top {
+            max-width: 100%;
+            height: auto;
+        }
+    
+        .col-lg-8 {
+            display: flex;
+            align-items: center;
+        }
+    
+        .card-body {
+            width: 100%;
+        }
+    }
+    body{
+        background-color: azure;
+    }
+    
+    
+</style>
+<!-- Navbar Start -->
+<div class="container-fluid bg-primary">
+    <div class="container">
+        <nav class="navbar navbar-dark navbar-expand-lg py-0">
+            <a href="/index" class="navbar-brand">
+                <h1 class="text-white fw-bold d-block">High<span class="text-secondary">Tech</span> </h1>
+            </a>
+            <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+                <div class="navbar-nav ms-auto mx-xl-auto p-0">
+                    {% if user.is_authenticated %}
+                    <a href="/index" class="nav-item nav-link ">Home</a>
+                    <a href="/about" class="nav-item nav-link">About</a>
+                    <a href="/service" class="nav-item nav-link">Services</a>
+                    <a href="/project" class="nav-item nav-link">Projects</a>
+                    <a href="/commune" class="nav-item nav-link">Contact</a>
+                    <a href="/chat" class="nav-item nav-link"><i class="fas fa-question-circle"></i> FAQ</a>
+                    
+                </div>
+            </div>
+            <div class="d-none d-xl-flex flex-shirink-0">
+                <div id="phone-tada" class="d-flex align-items-center justify-content-center me-4">
+                    <a href="https://wa.me/12512940274?text=Hello%20welcome%20to%20the%20best%20internet%20services%27%20providers%20globally,%20How%20may%20we%20help%20" class="position-relative animated tada infinite">
+                        <i class="fab fa-whatsapp text-white fa-4x"></i>
+                        <div class="position-absolute" style="top: -7px; left: 20px;">
+                            <span><i class="fa fa-comment-dots text-secondary"></i></span>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex flex-column pe-4 border-end">
+                    <span class="text-white-50">Have any questions?</span>
+                    <span class="text-secondary">Chat: +1 251 294-0274</span>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+                    <!-- Profile and notifications -->
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="profile-pic-container">
+                    <!-- <img src="{{customer.profile_pic.url}}" alt="Profile Picture" class="profile-pic"> -->
+                    <div class="online-indicator"></div>
+                </div>
+                <span class="ms-2 text-light" style="font-size: larger; font-weight: bolder;">Hello, {{ request.user.username }}</span>
+            </a>
+           
+            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                
+                <li> <a href="notifications" class="text-body " style="margin-left: 10%;">
+                    <i class="fas fa-envelope fa-2x "></i>
+                    <span class="badge rounded-pill badge-notification bg-danger">{{ unread_notifications_count }}</span>
+                </a></li>
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+        </div>
+                </div>
+                    {% else %}
+                    <a href="/login" class="nav-item nav-link text-white">LOGIN</a>
+                    <a href="/register" class="nav-item nav-link text-white">SIGNUP</a>
+                   {% endif %} 
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Navbar End -->
+
+
+    <div class="container mt-4 mb-4">
+        <div class="row justify-content-center">
+            <!-- Left Side: Gift Card Image and Amount -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card">
+                    <img src="{{ digital_key.image.url }}" class="card-img-top" alt="Gift Card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{digital_key.name}}</h5>
+                        <p class="card-text"><strong>Description:</strong> {{ digital_key.description }}</p>
+                        <p class="card-text"><strong>Price:</strong> ${{ digital_key.price }}</p>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Right Side: Gift Card Details Form -->
+            <div class="col-lg-8 col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Upload Your Gift Card</h4>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <!-- Card Type -->      
+                            <div class="form-group">
+                                <label for="card_type">Card Type</label>
+                                <input class="form-control" id="card_type" name="card_type">
+                                    
+                            </div>
+    
+                            <!-- Front Image                    Upload -->
+                            <div class="form-group">
+                                <label for="front_image">Upload Front Image</label>
+                                <input type="file" class="form-control-file" id="front_image" name="front_image">
+                            </div>
+    
+                            <!-- Back Image Upload -->
+                            <div class="form-group">
+                                <label for="back_image">Upload Back Image</label>
+                                <input type="file" class="form-control-file" id="back_image" name="back_image">
+                            </div>
+    
+                            <!-- Receipt Image Upload -->
+                            <div class="form-group">
+                                <label for="receipt_image">Upload Receipt Image</label>
+                                <input type="file" class="form-control-file" id="receipt_image" name="receipt_image">
+                            </div>
+    
+                            <!-- Card Code -->
+                            <div class="form-group">
+                                <label for="card_code">Card Code</label>
+                                <input type="text" class="form-control" id="card_code" name="card_code" placeholder="Enter Card Code">
+                            </div>
+    
+                            <!-- Submit Button -->
+                            <input type="submit" class="btn btn-primary btn-block" value="Submit Gift Card">
+                        </form>
+                        
+                    </div>
+                    {% if messages %}
+    <div class="alert alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+                    <a href="{% url 'payment_success' %}">success</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+{% endblock %}

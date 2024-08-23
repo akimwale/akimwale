@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .crypto-card {
+        cursor: pointer;
+        
+        transition: border-color 0.3s ease;
+    }
+    
+    .crypto-card.selected {
+        border-color: #007bff;
+    }
+    
+    .crypto-card img {
+        height: 100px;
+        object-fit: contain;
+        padding: 10px;
+    }
+    
+    #crypto-details .form-control {
+        border-radius: 8px;
+        font-size: 1rem;
+        padding: 10px;
+    }
+    body{
+        background-color: azure;
+    }
+</style>
+<!-- Navbar Start -->
+<div class="container-fluid bg-primary">
+    <div class="container">
+        <nav class="navbar navbar-dark navbar-expand-lg py-0">
+            <a href="/index" class="navbar-brand">
+                <h1 class="text-white fw-bold d-block">High<span class="text-secondary">Tech</span> </h1>
+            </a>
+            <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+                <div class="navbar-nav ms-auto mx-xl-auto p-0">
+                    {% if user.is_authenticated %}
+                    <a href="/index" class="nav-item nav-link ">Home</a>
+                    <a href="/about" class="nav-item active nav-link">About</a>
+                    <a href="/service" class="nav-item nav-link">Services</a>
+                    <a href="/project" class="nav-item nav-link">Projects</a>
+                    <a href="/commune" class="nav-item nav-link">Contact</a>
+                    <a href="/chat" class="nav-item nav-link"><i class="fas fa-question-circle"></i> FAQ</a>
+                    
+                </div>
+            </div>
+            <div class="d-none d-xl-flex flex-shirink-0">
+                <div id="phone-tada" class="d-flex align-items-center justify-content-center me-4">
+                    <a href="https://wa.me/12512940274?text=Hello%20welcome%20to%20the%20best%20internet%20services%27%20providers%20globally,%20How%20may%20we%20help%20" class="position-relative animated tada infinite">
+                        <i class="fab fa-whatsapp text-white fa-4x"></i>
+                        <div class="position-absolute" style="top: -7px; left: 20px;">
+                            <span><i class="fa fa-comment-dots text-secondary"></i></span>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex flex-column pe-4 border-end">
+                    <span class="text-white-50">Have any questions?</span>
+                    <span class="text-secondary">Chat: +1 251 294-0274</span>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+                    <!-- Profile and notifications -->
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="profile-pic-container">
+                    <img src="{{customer.profile_pic.url}}" alt="Profile Picture" class="profile-pic">
+                    <div class="online-indicator"></div>
+                </div>
+                <span class="ms-2 text-light" style="font-size: larger; font-weight: bolder;">Hello, {{ request.user.username }}</span>
+            </a>
+           
+            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                <li><a class="dropdown-item" href="{% url 'profile' customer.id %}">Profile</a></li>
+                <li> <a href="notifications" class="text-body " style="margin-left: 10%;">
+                    <i class="fas fa-envelope fa-2x "></i>
+                    <span class="badge rounded-pill badge-notification bg-danger">{{ unread_notifications_count }}</span>
+                </a></li>
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+        </div>
+                </div>
+                    {% else %}
+                    <a href="/login" class="nav-item nav-link text-white">LOGIN</a>
+                    <a href="/register" class="nav-item nav-link text-white">SIGNUP</a>
+                   {% endif %} 
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Navbar End -->
+
+<!-- crypto_payment.html -->
+<div class="container mt-4 mb-5" >
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Choose Cryptocurrency</h5>
+
+                    <!-- Crypto selection -->
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card crypto-card" data-crypto="bitcoin">
+                                <img src="{% static 'img/crypto.jpg' %}" class="card-img-top" alt="Bitcoin">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">Bitcoin</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card crypto-card" data-crypto="ethereum">
+                                <img src="{% static 'img/crypto.jpg' %}" class="card-img-top" alt="Ethereum">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">Ethereum</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                            <div class="card crypto-card" data-crypto="usdt">
+                                <img src="{% static 'img/crypto.jpg' %}" class="card-img-top" alt="USDT">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">USDT</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Display selected cryptocurrency details -->
+<div id="crypto-details" class="mt-4" style="display: none;">
+    <div class="form-group">
+        <label for="wallet_address">Wallet Address</label>
+        <input type="text" class="form-control" id="wallet_address" readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="network_type">Network</label>
+        <input type="text" class="form-control" id="network_type" readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="miner_fee">Network Fee</label>
+        <input type="text" class="form-control" id="miner_fee" readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="total">Total</label>
+        <input type="text" class="form-control" id="total" readonly>
+    </div>
+     <!-- Payment form -->
+     <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Proceed to Payment</button>
+    </form>
+
+    <!-- You can also add a cancel button that redirects to a different page -->
+    <a href="{% url 'index' %}">Cancel</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cryptoCards = document.querySelectorAll('.crypto-card');
+        const walletAddressInput = document.getElementById('wallet_address');
+        const totalInput = document.getElementById('total');
+        const networkTypeInput = document.getElementById('network_type');
+        const minerFeeInput = document.getElementById('miner_fee');
+        const cryptoDetails = document.getElementById('crypto-details');
+
+        const cryptoData = {
+            bitcoin: {
+                address: '{{ bitcoin_address }}',
+                total: '0.000092 BTC',  // Dynamic data from backend
+                networkType: '{{ bitcoin_network }}',
+                networkCost: '{{ bitcoin_cost }}'
+            },
+            ethereum: {
+                address: '{{ ethereum_address }}',
+                total: '0.0031 ETH',
+                networkType: '{{ ethereum_network }}',
+                networkCost: '{{ ethereum_cost }}'
+            },
+            usdt: {
+                address: '{{ usdt_address }}',
+                total: '0.054 USDT',
+                networkType: '{{ usdt_network }}',
+                networkCost: '{{ usdt_cost }}'
+            }
+        };
+
+        cryptoCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const cryptoType = this.getAttribute('data-crypto');
+                const selectedCrypto = cryptoData[cryptoType];
+
+                walletAddressInput.value = selectedCrypto.address;
+                totalInput.value = selectedCrypto.total;
+                networkTypeInput.value = selectedCrypto.networkType;
+                minerFeeInput.value = selectedCrypto.networkCost;
+
+                cryptoCards.forEach(card => card.classList.remove('selected'));
+                this.classList.add('selected');
+
+                cryptoDetails.style.display = 'block';
+            });
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cryptocurrency Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <style>
+        .stunts{
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-size: smaller;
+            font-weight: 400;
+            line-height: 2rem;
+            list-style: none;
+            
+    
+        }
+        li{
+            list-style: none;
+        }
+        .stunner{
+            background-color: rgb(7, 7, 84);
+            color: white;
+        }
+        .crypto-dashboard .market-info {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .crypto-dashboard .market-info div {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .crypto-dashboard .market-info i {
+            font-size: 24px;
+            color: #4caf50;
+            margin-bottom: 5px;
+        }
+        
+        .crypto-dashboard .market-info p {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .trending-coins h3, .gainers-coins h3 {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        
+        .trending-coins i, .gainers-coins i {
+            color: #ff9800;
+            margin-right: 5px;
+        }
+        
+        
+        
+    </style>
+    <div class="container mt-5">
+        <h2>Cryptocurrency Prices by Market Cap</h2>
+        <p>The global cryptocurrency market cap today is ${{ market_cap | intcomma }}.</p>
+    
+        <div class="row">
+            <!-- Market Cap and Trading Volume -->
+            <div class="col-md-4 stunts">
+                <div class="card stunner">
+                    <div class="card-body ">
+                        <i class="fas fa-chart-line"></i>
+                        <h5 class="text-warning">Market Cap</h5>
+                        <p>${{ market_cap | intcomma }}</p>
+                        <i class="fas fa-exchange-alt"></i>
+                        <h5 class="text-warning">24h Trading Volume</h5>
+                        <p>${{ trading_volume | intcomma }}</p>
+                    </div>
+                </div>
+            </div>
+            
+    
+            <!-- Trending Coins -->
+            <div class="col-md-4 stunts">
+                <div class="card stunner">
+                    <div class="card-body">
+                        <h5 class="text-success"><i class="fas fa-fire"></i> Trending</h5>
+                        <ul>
+                            {% for coin in trending_coins %}
+            {% if forloop.counter <= 3 %}
+    
+                <li><img src="{{ coin.item.small }}" alt="{{ coin.item.name }} logo" width="20" height="20"> {{ coin.item.name }} ({{ coin.item.symbol | upper }}) - Market Cap: {{ coin.item.market_cap | intcomma }} USD</li>
+            {% endif %}
+        {% endfor %}
+    
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Largest Gainers (Mock Data) -->
+            <div class="col-md-4 stunts">
+                <div class="card stunner">
+                    <div class="card-body text-success">
+                        <h5 class="text-light"><i class="fas fa-rocket"></i> Largest Gainers</h5>
+                        <ul>
+                            {% for coin in gainers_coins %}
+                            {% if forloop.counter <= 2 %}
+                                <li><img src="{{ coin.image }}" alt="{{ coin.name }} logo" width="20" height="20"> {{ coin.name }} ({{ coin.symbol | upper }}) - Market Cap: {{ coin.market_cap | intcomma }} USD</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

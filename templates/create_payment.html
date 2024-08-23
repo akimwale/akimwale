@@ -1,0 +1,26 @@
+<!-- create_payment.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Payment</title>
+</head>
+<body>
+    <h1>Confirm Your Payment</h1>
+
+    <!-- Display details about the digital key -->
+    <p>Item: {{ digital_key.name }}</p>
+    <p>Description: {{ digital_key.description }}</p>
+    <p>Price: ${{ digital_key.price }}</p>
+
+    <!-- Payment form -->
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Proceed to Payment</button>
+    </form>
+
+    <!-- You can also add a cancel button that redirects to a different page -->
+    <a href="{% url 'index' %}">Cancel</a>
+</body>
+</html>

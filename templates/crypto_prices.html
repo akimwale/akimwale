@@ -1,0 +1,351 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptocurrency Prices</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .crypto-table th, .crypto-table td {
+            vertical-align: middle;
+        }
+        .price-up {
+            color: green;
+        }
+        .price-down {
+            color: red;
+        }
+        .sparkline {
+            width: 100px;
+            height: 30px;
+        }
+        .stunts{
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-size: smaller;
+            font-weight: 400;
+            line-height: 2rem;
+            list-style: none;
+            
+    
+        }
+        li{
+            list-style: none;
+        }
+        .stunner{
+            background-color: rgb(7, 7, 84);
+            color: white;
+        }
+        .crypto-dashboard .market-info {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .crypto-dashboard .market-info div {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .crypto-dashboard .market-info i {
+            font-size: 24px;
+            color: #4caf50;
+            margin-bottom: 5px;
+        }
+        
+        .crypto-dashboard .market-info p {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .trending-coins h3, .gainers-coins h3 {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        
+        .trending-coins i, .gainers-coins i {
+            color: #ff9800;
+            margin-right: 5px;
+        }
+        
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-dark py-2 d-none d-md-flex">
+        <div class="container">
+            <div class="d-flex justify-content-between topbar">
+                <div class="top-info">
+                    <small class="me-3 text-white-50"><a href="#"><i class="fas fa-map-marker-alt me-2 text-secondary"></i></a>23 Ranking Street, New York</small>
+                    <small class="me-3 text-white-50"><a href="mailto:richardwhitehill10@gmail.com"><i class="fas fa-envelope me-2 text-secondary"></i></a>Email@Example.com</small>
+                </div>
+                <div id="note" class="text-secondary d-none d-xl-flex"><small>Note : We are your one stop for handling account issues of any kind</small></div>
+                <div class="top-link">
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-facebook-f text-primary"></i></a>
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-twitter text-primary"></i></a>
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-instagram text-primary"></i></a>
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i class="fab fa-linkedin-in text-primary"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+
+    <div class="container mt-5">
+        <h2>Cryptocurrency Prices by Market Cap</h2>
+        <p>The global cryptocurrency market cap today is ${{ market_cap | intcomma }}.</p>
+    
+        <div class="row">
+            <!-- Market Cap and Trading Volume -->
+            <div class="col-md-4 stunts">
+                <div class="card stunner">
+                    <div class="card-body ">
+                        <i class="fas fa-chart-line"></i>
+                        <h5 class="text-warning">Market Cap</h5>
+                        <p>${{ market_cap | intcomma }}</p>
+                        <i class="fas fa-exchange-alt"></i>
+                        <h5 class="text-warning">24h Trading Volume</h5>
+                        <p>${{ trading_volume | intcomma }}</p>
+                    </div>
+                </div>
+            </div>
+            
+    
+            <!-- Trending Coins -->
+            <div class="col-md-4 stunts">
+                <div class="card stunner">
+                    <div class="card-body">
+                        <h5 class="text-success"><i class="fas fa-fire"></i> Trending</h5>
+                        <ul>
+                            {% for coin in trending_coins %}
+            {% if forloop.counter <= 3 %}
+    
+                <li><img src="{{ coin.item.small }}" alt="{{ coin.item.name }} logo" width="20" height="20"> {{ coin.item.name }} ({{ coin.item.symbol | upper }}) - Market Cap: {{ coin.item.market_cap | intcomma }} USD</li>
+            {% endif %}
+        {% endfor %}
+    
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Largest Gainers (Mock Data) -->
+            <div class="col-md-4 stunts">
+                <div class="card stunner">
+                    <div class="card-body text-success">
+                        <h5 class="text-light"><i class="fas fa-rocket"></i> Largest Gainers</h5>
+                        <ul>
+                            {% for coin in gainers_coins %}
+                            {% if forloop.counter <= 2 %}
+                                <li><img src="{{ coin.image }}" alt="{{ coin.name }} logo" width="20" height="20"> {{ coin.name }} ({{ coin.symbol | upper }}) - Market Cap: {{ coin.market_cap | intcomma }} USD</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1>Cryptocurrency Prices</h1>
+    </div>
+
+    <!-- Sorting and Filtering Options -->
+    <div class="d-flex justify-content-between mb-3">
+        <select id="sort-select" class="form-select w-auto">
+            <option value="rank">Sort by Rank</option>
+            <option value="price">Sort by Price</option>
+            <option value="volume">Sort by Volume</option>
+            <option value="market_cap">Sort by Market Cap</option>
+        </select>
+        <input id="filter-input" type="text" class="form-control w-25" placeholder="Search Coin...">
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover crypto-table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Coin</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">1h</th>
+                    <th scope="col">24h</th>
+                    <th scope="col">7d</th>
+                    <th scope="col">24h Volume</th>
+                    <th scope="col">Market Cap</th>
+                    <th scope="col">Last 7 Days</th>
+                </tr>
+            </thead>
+            <tbody id="crypto-table-body">
+                <!-- Data will be injected here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<script>
+    // Function to fetch cryptocurrency data from CoinGecko API
+    // Function to fetch and update cryptocurrency data
+async function fetchCryptoData() {
+    try {
+        const url = new URL('https://api.coingecko.com/api/v3/coins/markets');
+        url.searchParams.append('vs_currency', 'usd');
+        url.searchParams.append('order', 'market_cap_desc');
+        url.searchParams.append('per_page', 100);
+        url.searchParams.append('page', 1);
+        url.searchParams.append('sparkline', 'true');
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        populateTable(data);
+    } catch (error) {
+        console.error('Error fetching cryptocurrency data:', error);
+    }
+}
+
+// Initial Data Fetch and Set Interval for Live Updates
+fetchCryptoData();
+setInterval(fetchCryptoData, 30000); // Update every 60 seconds
+
+    
+function populateTable(data) {
+    const tableBody = document.getElementById('crypto-table-body');
+    tableBody.innerHTML = ''; // Clear previous data
+
+    data.forEach((coin, index) => {
+        const priceChange1h = coin.price_change_percentage_1h_in_currency || 0;
+        const priceChange24h = coin.price_change_percentage_24h_in_currency || 0;
+        const priceChange7d = coin.price_change_percentage_7d_in_currency || 0;
+
+        const sparklineData = coin.sparkline_in_7d ? coin.sparkline_in_7d.price : [];
+
+        const row = `
+            <tr>
+                <th scope="row">${index + 1}</th>
+                <td>
+                    <img src="${coin.image}" alt="${coin.name} Logo" width="24" height="24">
+                    <a href="/purchase?symbol=${coin.symbol}" class="text-decoration-none">${coin.name} ${coin.symbol.toUpperCase()}</a>
+                </td>
+                <td>$${coin.current_price.toLocaleString()}</td>
+                <td><span class="${priceChange1h >= 0 ? 'price-up' : 'price-down'}">${priceChange1h.toFixed(2)}%</span></td>
+                <td><span class="${priceChange24h >= 0 ? 'price-up' : 'price-down'}">${priceChange24h.toFixed(2)}%</span></td>
+                <td><span class="${priceChange7d >= 0 ? 'price-up' : 'price-down'}">${priceChange7d.toFixed(2)}%</span></td>
+                <td>$${coin.total_volume.toLocaleString()}</td>
+                <td>$${coin.market_cap.toLocaleString()}</td>
+                <td>
+                    <canvas id="sparkline-${index}" class="sparkline"></canvas>
+                </td>
+            </tr>
+        `;
+        tableBody.insertAdjacentHTML('beforeend', row);
+
+        // Render the sparkline chart for each canvas
+        const ctx = document.getElementById(`sparkline-${index}`).getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: sparklineData.length}, (_, i) => i + 1),
+                datasets: [{
+                    data: sparklineData,
+                    borderColor: '#007bff',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        display: false,
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+}
+
+    
+    
+    // Sorting and Filtering Functions
+    function sortTable(criteria) {
+        const rows = Array.from(document.getElementById('crypto-table-body').rows);
+    
+        rows.sort((a, b) => {
+            let aValue, bValue;
+            switch (criteria) {
+                case 'price':
+                    aValue = parseFloat(a.cells[2].textContent.replace(/[$,]/g, ''));
+                    bValue = parseFloat(b.cells[2].textContent.replace(/[$,]/g, ''));
+                    break;
+                case 'volume':
+                    aValue = parseFloat(a.cells[6].textContent.replace(/[$,]/g, ''));
+                    bValue = parseFloat(b.cells[6].textContent.replace(/[$,]/g, ''));
+                    break;
+                case 'market_cap':
+                    aValue = parseFloat(a.cells[7].textContent.replace(/[$,]/g, ''));
+                    bValue = parseFloat(b.cells[7].textContent.replace(/[$,]/g, ''));
+                    break;
+                default:
+                    aValue = parseInt(a.cells[0].textContent);
+                    bValue = parseInt(b.cells[0].textContent);
+            }
+            return aValue - bValue;
+        });
+    
+        const tableBody = document.getElementById('crypto-table-body');
+        tableBody.innerHTML = ''; // Clear previous data
+        rows.forEach(row => tableBody.appendChild(row));
+    }
+    
+    function filterTable() {
+        const input = document.getElementById('filter-input').value.toLowerCase();
+        const rows = document.getElementById('crypto-table-body').rows;
+    
+        Array.from(rows).forEach(row => {
+            const coinName = row.cells[1].textContent.toLowerCase();
+            row.style.display = coinName.includes(input) ? '' : 'none';
+        });
+    }
+    
+    // Event Listeners
+    document.getElementById('sort-select').addEventListener('change', (e) => {
+        sortTable(e.target.value);
+    });
+    
+    document.getElementById('filter-input').addEventListener('input', filterTable);
+    
+    // Initial Data Fetch
+    fetchCryptoData();
+    
+</script>
+
+</body>
+</html>
+

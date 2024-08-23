@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+            background-color: #e5ddd5;
+        }
+        #chat-box {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background: #ffffff;
+            border-top: 1px solid #ccc;
+        }
+        .chat-message {
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 15px;
+            margin: 5px 0;
+            position: relative;
+            clear: both;
+            display: flex;
+            align-items: center;
+        }
+        .chat-message img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .bot-message {
+            background: #dcf8c6;
+            align-self: flex-start;
+        }
+        .user-message {
+            background: #ffffff;
+            align-self: flex-end;
+            text-align: right;
+        }
+        .chat-input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+            background: #ffffff;
+        }
+        #chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+        }
+        #send-button {
+            margin-left: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        #predefined-messages {
+            margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .predefined-msg {
+            margin: 5px;
+            padding: 10px;
+            background: #f1f1f1;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body >
+    <!-- Topbar Start -->
+         
+        
+    <div class="container-fluid  px-5 d-none d-lg-block kaisei-tokumin-regular" style="background: orange;">
+        <div class="row gx-0">
+                <div class="d-inline-flex align-items-center" style="height: 45px;">
+                    <a href="javascript:history.back()" class="back-button btn btn-info text-white ">
+                        <i class="fas fa-arrow-left"></i> previous
+                    </a>
+                    
+                </div>
+            </div>
+            </div>
+            </div>
+    <!-- Topbar End -->
+
+    
+    <div id="chat-container">
+        <div id="chat-box">
+            <!-- Chat messages will be appended here -->
+        </div>
+        <div id="predefined-messages">
+            <!-- Predefined messages will be loaded here -->
+        </div>
+        <div class="chat-input-container">
+            <input type="text" id="chat-input" placeholder="Type your message here">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function fetchPredefinedMessages() {
+                $.getJSON("{% url 'predefined_messages' %}", function (data) {
+                    $('#predefined-messages').empty();
+                    data.messages.forEach(function (message) {
+                        $('#predefined-messages').append('<div class="predefined-msg">' + message + '</div>');
+                    });
+                });
+            }
+
+            fetchPredefinedMessages();
+
+            $('#send-button').click(function () {
+                const question = $('#chat-input').val();
+                $.ajax({
+                    url: "{% url 'chatbot' %}",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ question: question }),
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        $('#chat-box').append('<div class="chat-message user-message"><img src="{{ user_profile.profile_pic.url }}" alt="User"> ' + question + '</div>');
+                        $('#chat-box').append('<div class="chat-message bot-message"><img src="{% static 'img/team-1.jpg' %}" alt="Bot"> ' + data.answer + '</div>');
+                        $('#chat-input').val('');
+                        $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            $(document).on('click', '.predefined-msg', function () {
+                $('#chat-input').val($(this).text());
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+

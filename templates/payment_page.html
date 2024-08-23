@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        .payment-option {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin: 0px;
+            margin-top: 2px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .payment-option:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+        }
+        .payment-option img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+        .payment-option h5 {
+            margin-top: 20px;
+            font-style: italic;
+            font-size: 20px;
+        }
+        body{
+           background-color: rgb(168, 204, 226);
+           color:black;
+           font-size: large;
+           text-align: center;
+        }
+    </style>
+    <!-- Navbar Start -->
+    <div class="container-fluid bg-primary">
+        <div class="container">
+            <nav class="navbar navbar-dark navbar-expand-lg py-0">
+                <a href="/index" class="navbar-brand">
+                    <h1 class="text-white fw-bold d-block">High<span class="text-secondary">Tech</span> </h1>
+                </a>
+                <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto mx-xl-auto p-0">
+                        {% if user.is_authenticated %}
+                        <a href="/index" class="nav-item nav-link ">Home</a>
+                        <a href="/about" class="nav-item  nav-link">About</a>
+                        <a href="/service" class="nav-item nav-link">Services</a>
+                        <a href="/project" class="nav-item nav-link">Projects</a>
+                        <a href="/commune" class="nav-item nav-link">Contact</a>
+                        <a href="/chat" class="nav-item nav-link"><i class="fas fa-question-circle"></i> FAQ</a>
+                        
+                    </div>
+                </div>
+                <div class="d-none d-xl-flex flex-shirink-0">
+                    <div id="phone-tada" class="d-flex align-items-center justify-content-center me-4">
+                        <a href="https://wa.me/12512940274?text=Hello%20welcome%20to%20the%20best%20internet%20services%27%20providers%20globally,%20How%20may%20we%20help%20" class="position-relative animated tada infinite">
+                            <i class="fab fa-whatsapp text-white fa-4x"></i>
+                            <div class="position-absolute" style="top: -7px; left: 20px;">
+                                <span><i class="fa fa-comment-dots text-secondary"></i></span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="d-flex flex-column pe-4 border-end">
+                        <span class="text-white-50">Have any questions?</span>
+                        <span class="text-secondary">Chat: +1 251 294-0274</span>
+                    </div>
+                </div>
+                <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+                        <!-- Profile and notifications -->
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="profile-pic-container">
+                        <img src="{{customer.profile_pic.url}}" alt="Profile Picture" class="profile-pic">
+                        <div class="online-indicator"></div>
+                    </div>
+                    <span class="ms-2 text-light" style="font-size: larger; font-weight: bolder;">Hello, {{ request.user.username }}</span>
+                </a>
+               
+                <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="{% url 'profile' customer.id %}">Profile</a></li>
+                    <li> <a href="notifications" class="text-body " style="margin-left: 10%;">
+                        <i class="fas fa-envelope fa-2x "></i>
+                        <span class="badge rounded-pill badge-notification bg-danger">{{ unread_notifications_count }}</span>
+                    </a></li>
+                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+            </div>
+                    </div>
+                        {% else %}
+                        <a href="/login" class="nav-item nav-link text-white">LOGIN</a>
+                        <a href="/register" class="nav-item nav-link text-white">SIGNUP</a>
+                       {% endif %} 
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5">
+        <div class="container text-center py-5">
+            <h1 class="display-2 text-white mb-4 animated slideInDown">Chooose Your Payment Method</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <div class="container" >
+        <h1 class="text-center my-4">Choose Your Payment Method</h1>
+        <div class="row">
+            <div class="col-md-3 payment-option" onclick="window.location.href='{% url 'create_payment' key.id %}'">
+                <img src="{% static 'img/crypto.jpg' %}" alt="Crypto">
+                <h5>Crypto</h5>
+            </div>
+            <div class="col-md-3 payment-option" onclick="window.location.href='{% url 'gift_card_payment' pk=key.id %}'">
+                <img src="{% static 'img/gift_card.jpg' %}" alt="Gift Card">
+                <h5>Gift Card</h5>
+            </div>
+            <div class="col-md-3 payment-option" onclick="window.location.href='{% url 'mobile_payment' %}'">
+                <img src="{% static 'img/mobile_transfer.jpg' %}" alt="Mobile App Transfer">
+                <h5>Mobile App Transfer</h5>
+            </div>
+            <div class="col-md-3 payment-option" onclick="window.location.href='{% url 'mobile_payment' %}'">
+                <img src="{% static 'img/bank_transfer.jpg' %}" alt="Bank Transfer">
+                <h5>Bank Transfer</h5>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cryptocurrency Converter</title>
+</head>
+<body>
+    <h1>Cryptocurrency Converter</h1>
+    <form id="converter-form">
+        <input type="number" id="amount" placeholder="Amount" required>
+        <select id="from-currency">
+            {% for coin in coins %}
+            <option value="{{ coin.id }}">{{ coin.name }}</option>
+            {% endfor %}
+        </select>
+        to
+        <select id="to-currency">
+            {% for coin in coins %}
+            <option value="{{ coin.id }}">{{ coin.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Convert</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('converter-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let amount = document.getElementById('amount').value;
+            let fromCurrency = document.getElementById('from-currency').value;
+            let toCurrency = document.getElementById('to-currency').value;
+    
+            // Make a fetch call to the appropriate endpoint
+            fetch(`/accounts/convert/?from=${fromCurrency}&to=${toCurrency}&amount=${amount}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let convertedAmount = data.converted_amount;
+                    document.getElementById('result').innerHTML = `${amount} ${fromCurrency} is equal to ${convertedAmount} ${toCurrency}`;
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                    document.getElementById('result').innerHTML = 'An error occurred while processing your request.';
+                });
+        });
+    </script>
+    
+</body>
+</html>
