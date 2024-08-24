@@ -25,3 +25,5 @@ django-cors-headers
 channels
 humanize
 django-storages
+django-environ
+
