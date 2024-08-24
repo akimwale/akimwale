@@ -24,4 +24,4 @@ django-filter
 django-cors-headers
 channels
 humanize
-storages
+django-storages
