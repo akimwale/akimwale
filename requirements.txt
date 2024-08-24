@@ -26,4 +26,6 @@ channels
 humanize
 django-storages
 django-environ
+pycoingecko
+
 
