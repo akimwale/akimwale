@@ -27,5 +27,6 @@ humanize
 django-storages
 django-environ
 pycoingecko
+psycopg2
 
 
