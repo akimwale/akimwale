@@ -99,16 +99,16 @@ WSGI_APPLICATION = 'telusko_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'telusko',
-        'USER': 'postgres',
-        'PASSWORD': 'akim1234',
-        'HOST': 'localhost',
-        'CONN_MAX_AGE': 600,  # Reconnect if the database connection is idle for 10 minutes
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'telusko',
+#         'USER': 'postgres',
+#         'PASSWORD': 'akim1234',
+#         'HOST': 'localhost',
+#         'CONN_MAX_AGE': 600,  # Reconnect if the database connection is idle for 10 minutes
+#     }
+# }
 
 
 # Password validation
