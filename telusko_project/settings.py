@@ -14,6 +14,12 @@ from pathlib import Path
 import os
 import environ
 
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+}
+
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
