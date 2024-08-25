@@ -28,5 +28,6 @@ django-storages
 django-environ
 pycoingecko
 psycopg2
+dj-database-url
 
 
